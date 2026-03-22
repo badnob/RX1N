@@ -357,7 +357,7 @@ export default function App({ network, setNetwork }: AppProps) {
           <div className="flex items-center justify-center gap-4 mt-5">
             <a href="https://x1nerator.xyz" target="_blank" rel="noopener noreferrer" className="text-[#00ff41] hover:underline text-xs font-bold">🔥 Burn</a>
             <span className="text-[#003300]">|</span>
-            <a href="https://github.com/badnob" target="_blank" rel="noopener noreferrer" className="text-[#00ff41] hover:underline text-xs font-bold">⚡ Git</a>
+            <a href="https://github.com/badnob" target="_blank" rel="noopener noreferrer" className="text-[#00ff41] hover:underline text-xs font-bold">💻 Git</a>
             <span className="text-[#003300]">|</span>
             <a href="https://t.me/rx1ndrop" target="_blank" rel="noopener noreferrer" className="text-[#00ff41] hover:underline text-xs font-bold">✈️ Gram</a>
           </div>
