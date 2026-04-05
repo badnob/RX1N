@@ -4,12 +4,12 @@
 
 RX1N is a trustless, wallet-connected airdrop tool built for the X1 blockchain. Point it at any token mint, fetch all holders automatically, select your payload and fire — all from your browser, no backend required. Built with ❤️ by [tony](https://t.me/ironmanmk2).
 
-🌐 [rx1n.xyz](https://www.rx1n.xyz) · 🔥 [x1nerator.xyz](https://x1nerator.xyz) · ✈️ [t.me/rx1ndrop](https://t.me/rx1ndrop)
+🌐 [t.me/X1nerator](https://t.me/X1nerator) · 🔥 [x1nerator.xyz](https://x1nerator.xyz) · ✈️ [t.me/rx1ndrop](https://t.me/rx1ndrop)
 
 ---
 
 ## 🛠️ How To Use
-
+VISIT [rx1n.xyz](https://www.rx1n.xyz)
 1. 🔌 **Connect your wallet** — Backpack or X1 Wallet
 2. 🔢 **Enter max recipients** — sets a hard cap and shows you the full cost upfront before anything happens
 3. 🔍 **Fetch holders** — paste the mint address of the token whose holders you want to target. RX1N scans the X1 ledger, sorts holders from highest balance to lowest, and caps the list at your number
