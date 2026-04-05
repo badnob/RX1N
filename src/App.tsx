@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -30,7 +29,7 @@ interface AppProps {
 function getSafePubKey(mintStr: string): string {
   try {
     if (!mintStr) return '';
-    const clean = mintStr.replace(/[\s\uFEFF\xA0]+/g, '').trim();
+    const clean = mintStr.replace(/[\\s\\uFEFF\\xA0]+/g, '').trim();
     const isValidBase58 = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(clean);
     if (!isValidBase58) return '';
     const pk = new PublicKey(clean);
@@ -166,7 +165,7 @@ export default function App({ network, setNetwork }: AppProps) {
     try {
       setStatus('Validating target mint address...');
       const rawString = sourceMint || '';
-      const cleanMintStr = rawString.replace(/[\s\uFEFF\xA0]+/g, '').trim();
+      const cleanMintStr = rawString.replace(/[\\s\\uFEFF\\xA0]+/g, '').trim();
 
       if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(cleanMintStr)) {
         setStatus('Error: Invalid Solana address. Ensure no special characters are present.');
@@ -388,7 +387,6 @@ export default function App({ network, setNetwork }: AppProps) {
       <div className={styles.scanlines}></div>
 
       <div className={`relative w-full max-w-lg ${styles.neonContainer} pb-4 z-10 mt-8`}>
-
         {/* Network selector */}
         <div className="absolute top-4 left-4 z-20">
           <select
@@ -401,22 +399,31 @@ export default function App({ network, setNetwork }: AppProps) {
           </select>
         </div>
 
-        {/* Author tag */}
-        <div className="absolute top-4 right-4 text-[10px] text-[#00aa22] font-mono tracking-widest z-20">
-          // by{' '}
+        {/* Follow us on X (positioned to left of title) */}
+        <div className="absolute top-4 left-16 text-[10px] text-[#00aa22] font-mono tracking-widest z-20">
+          Follow us on X @
           <a
-            href="https://t.me/ironmanmk2"
+            href="https://x.com/rx1ndrop"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#00ff41] hover:bg-[#00ff41] hover:text-black px-1 transition-all border border-transparent hover:border-[#00ff41] font-bold"
           >
-            tony
+            rx1ndrop
           </a>
         </div>
 
         {/* Header */}
         <div className="p-6 text-center relative">
-          <h1 className={`text-4xl font-black tracking-widest ${styles.glowText} mx-auto`}>RX1N</h1>
+          <h1 className="mx-auto">
+            <a
+              href="https://x.com/rx1ndrop"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-4xl font-black tracking-widest ${styles.glowText}`}
+            >
+              RX1N
+            </a>
+          </h1>
           <p className="text-xs text-[#00aa22] mt-2 font-bold tracking-[0.3em]">FETCH & DROP PROTOCOL</p>
           <div className="flex items-center justify-center gap-4 mt-5">
             <a href="https://x1nerator.xyz" target="_blank" rel="noopener noreferrer" className="text-[#00ff41] hover:underline text-xs font-bold">🔥 Burn</a>
