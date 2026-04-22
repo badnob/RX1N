@@ -67,9 +67,9 @@ export async function fetchTokenMetadata(
     if (xdexMap.has(mintStr)) {
       const data = xdexMap.get(mintStr)!;
       finalSymbol = data.symbol || finalSymbol;
-      finalName = data.name || finalName;
+      finalName = data.name || finalSymbol;
       finalLogo = resolveLogoUrl(data.logo);
-return { symbol: finalSymbol, name: finalName, logo: finalLogo, supply: finalSupply };
+      return { symbol: finalSymbol, name: finalName, logo: finalLogo, supply: finalSupply };
     }
 
     const METAPLEX = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
