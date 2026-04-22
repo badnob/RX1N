@@ -1,6 +1,5 @@
 // src/lib/metadataFetcher.tsx
 import { Connection, PublicKey } from '@solana/web3.js';
-import axios from 'axios';
 
 const xdexTokensCache = new Map<string, Map<string, any>>();
 
@@ -8,11 +7,22 @@ async function getXdexTokens(network: string): Promise<Map<string, any>> {
   if (xdexTokensCache.has(network)) return xdexTokensCache.get(network)!;
 
   try {
-    const res = await axios.get('https://api.xdex.xyz/api/xendex/pool/list', {
-      params: { network: network === 'mainnet' ? 'X1 Mainnet' : 'X1 Testnet' },
+    const networkParam = network === 'mainnet' ? 'X1%20Mainnet' : 'X1%20Testnet';
+    const url = `https://api.xdex.xyz/api/xendex/pool/list?network=${networkParam}`;
+    
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
     });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
+    
+    const json = await res.json();
     const map = new Map<string, any>();
-    const pools = Array.isArray(res.data?.data) ? res.data.data : [];
+    const pools = Array.isArray(json?.data) ? json.data : [];
+    
     pools.forEach((p: any) => {
       if (p.token1_address) {
         map.set(p.token1_address, {
@@ -29,10 +39,11 @@ async function getXdexTokens(network: string): Promise<Map<string, any>> {
         });
       }
     });
+    
     xdexTokensCache.set(network, map);
     return map;
   } catch (e) {
-    console.warn('[metadataFetcher] XDEX pool fetch failed', e);
+    console.warn('[metadataFetcher] XDEX pool fetch failed:', e);
     return new Map();
   }
 }
