@@ -2,7 +2,6 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import axios from 'axios';
 
-// Cache is keyed by network so switching mainnet↔testnet always fetches fresh data
 const xdexTokensCache = new Map<string, Map<string, any>>();
 
 async function getXdexTokens(network: string): Promise<Map<string, any>> {
@@ -18,14 +17,14 @@ async function getXdexTokens(network: string): Promise<Map<string, any>> {
       if (p.token1_address) {
         map.set(p.token1_address, {
           symbol: p.token1_symbol,
-          name: p.token1_name,
+          name: p.token1_name || p.token1_symbol || 'Unknown',
           logo: p.token1_logo,
         });
       }
       if (p.token2_address) {
         map.set(p.token2_address, {
           symbol: p.token2_symbol,
-          name: p.token2_name,
+          name: p.token2_name || p.token2_symbol || 'Unknown',
           logo: p.token2_logo,
         });
       }
@@ -57,7 +56,6 @@ export async function fetchTokenMetadata(
   try {
     const mint = new PublicKey(mintStr);
 
-    // 1. Total supply directly from RPC
     try {
       const supplyInfo = await connection.getTokenSupply(mint);
       finalSupply = supplyInfo.value.uiAmount || 0;
@@ -65,17 +63,15 @@ export async function fetchTokenMetadata(
       console.warn('[metadataFetcher] Supply fetch failed', e);
     }
 
-    // 2. XDEX verified pool list (network-keyed cache)
     const xdexMap = await getXdexTokens(network);
     if (xdexMap.has(mintStr)) {
       const data = xdexMap.get(mintStr)!;
       finalSymbol = data.symbol || finalSymbol;
       finalName = data.name || finalName;
       finalLogo = resolveLogoUrl(data.logo);
-      return { symbol: finalSymbol, name: finalName, logo: finalLogo, supply: finalSupply };
+return { symbol: finalSymbol, name: finalName, logo: finalLogo, supply: finalSupply };
     }
 
-    // 3. On-chain Metaplex metadata (browser-safe — no Buffer)
     const METAPLEX = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
     const [pda] = PublicKey.findProgramAddressSync(
       [new TextEncoder().encode('metadata'), METAPLEX.toBytes(), mint.toBytes()],
@@ -85,7 +81,7 @@ export async function fetchTokenMetadata(
     const acc = await connection.getAccountInfo(pda);
     if (acc?.data) {
       const view = new DataView(acc.data.buffer, acc.data.byteOffset, acc.data.byteLength);
-      let offset = 65; // key(1) + updateAuthority(32) + mint(32)
+      let offset = 65;
 
       try {
         const nameLen = view.getUint32(offset, true); offset += 4;
