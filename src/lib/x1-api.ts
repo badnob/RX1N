@@ -1,8 +1,4 @@
 // src/lib/x1-api.ts
-// Fetches wallet token balances from the XDEX API.
-// Used as the primary source for the token selector in App.tsx;
-// falls back to direct RPC scan if the API returns nothing.
-
 import axios from 'axios';
 
 export interface TokenData {
@@ -28,12 +24,10 @@ export async function getUserTokens(
       },
     });
 
-    // XDEX wallet tokens API returns { data: { tokens: [...] } }
-    const outerData = response.data?.data;
-    const tokenList: any[] = Array.isArray(outerData?.tokens)
-      ? outerData.tokens
-      : Array.isArray(outerData)
-      ? outerData
+    const tokenList: any[] = Array.isArray(response.data?.data?.tokens)
+      ? response.data.data.tokens
+      : Array.isArray(response.data?.data)
+      ? response.data.data
       : Array.isArray(response.data)
       ? response.data
       : [];
