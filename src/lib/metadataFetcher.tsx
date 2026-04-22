@@ -1,14 +1,18 @@
 // src/lib/metadataFetcher.tsx
+// RX1N version - uses x1nerator.xyz proxy for XDEX data
 import { Connection, PublicKey } from '@solana/web3.js';
 
 const xdexTokensCache = new Map<string, Map<string, any>>();
+
+// CHANGE THIS to your x1nerator domain
+const PROXY_BASE_URL = 'https://x1nerator.xyz/api/xdex-proxy';
 
 async function getXdexTokens(network: string): Promise<Map<string, any>> {
   if (xdexTokensCache.has(network)) return xdexTokensCache.get(network)!;
 
   try {
     const networkParam = network === 'mainnet' ? 'X1%20Mainnet' : 'X1%20Testnet';
-    const url = `https://api.xdex.xyz/api/xendex/pool/list?network=${networkParam}`;
+    const url = `${PROXY_BASE_URL}/pool-list?network=${networkParam}`;
     
     const res = await fetch(url, {
       method: 'GET',
@@ -43,7 +47,7 @@ async function getXdexTokens(network: string): Promise<Map<string, any>> {
     xdexTokensCache.set(network, map);
     return map;
   } catch (e) {
-    console.warn('[metadataFetcher] XDEX pool fetch failed:', e);
+    console.warn('[metadataFetcher] Proxy fetch failed:', e);
     return new Map();
   }
 }
