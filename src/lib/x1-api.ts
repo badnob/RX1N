@@ -28,23 +28,26 @@ export async function getUserTokens(
       },
     });
 
-    const tokenList: any[] = Array.isArray(response.data?.data)
-      ? response.data.data
+    // XDEX wallet tokens API returns { data: { tokens: [...] } }
+    const outerData = response.data?.data;
+    const tokenList: any[] = Array.isArray(outerData?.tokens)
+      ? outerData.tokens
+      : Array.isArray(outerData)
+      ? outerData
       : Array.isArray(response.data)
       ? response.data
       : [];
 
     return tokenList.map((token: any): TokenData => ({
-      mint: token.address,
+      mint: token.mint || token.address,
       symbol: token.symbol || 'UNK',
       name: token.name || 'Unknown',
-      logo: token.image || token.logoURI || null,
-      balance: token.balance ?? 0,
+      logo: token.imageUrl || token.image || token.logoURI || null,
+      balance: token.ui_amount ?? token.balance ?? 0,
       decimals: token.decimals ?? 0,
     }));
   } catch (error) {
     console.error('[x1-api] getUserTokens failed:', error);
-    // Return empty array so the caller (App.tsx) can trigger its RPC fallback
     return [];
   }
 }
